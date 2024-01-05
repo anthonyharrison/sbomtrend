@@ -2,7 +2,7 @@
 
 SBOMTrend analyses a directory of SBOM (Software Bill of Materials) in either
 [SPDX](https://www.spdx.org) and [CycloneDX](https://www.cyclonedx.org) formats.
-It identifies all files within a directory and includes license and copyright information, where possible, for each file.
+It analyses all SBOM files within a directory and identifies license and version changes, for each file.
 
 It is intended to be used as part of a continuous integration system to enable accurate records of SBOMs to be maintained, typically through the
 build development phase, and also to support subsequent audit needs to determine if a particular component has been used.
