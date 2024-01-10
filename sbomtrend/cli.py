@@ -9,7 +9,10 @@ import sys
 import textwrap
 from collections import ChainMap
 
+from datetime import datetime
+from lib4sbom.data.document import SBOMDocument
 from lib4sbom.parser import SBOMParser
+from lib4sbom.license import LicenseScanner
 
 from sbomtrend.version import VERSION
 
@@ -104,26 +107,45 @@ def main(argv=None):
             print(f"Analysing {module_name}")
 
     sbom_packages = {}
+    license_scanner = LicenseScanner()
     # Parse each SBOM file in directory
-    for entry in file_dir.iterdir():
+    for entry in sorted(pathlib.Path(file_dir).iterdir()):
         parser = SBOMParser()
         # Load SBOM - will autodetect SBOM type
         parser.parse_file(str(entry))
+        # Get date from SBOM
+        document = SBOMDocument()
+        document.copy_document(parser.get_document())
+        dt = datetime.strptime(document.get_created(),"%Y-%m-%dT%H:%M:%SZ")
+        date = datetime.strftime(dt,"%d-%B-%Y")
         for package in parser.get_packages():
             # For each package, extract version and licence information
             name = package["name"]
             if module_name == "" or module_name == name:
                 version = package.get("version", "MISSING")
-                license = package.get("licenseconcluded", "NONE")
+                license_text = package.get("licenseconcluded", "NONE")
+                # Correct licence text (if required)
+                license = license_scanner.find_license(license_text)
                 package_data = sbom_packages.get(name)
                 if package_data is None:
                     package_data = {}
                     package_data["version"] = {}
                     package_data["license"] = {}
-
+                    package_data["version_history"] = {}
                 item = {}
                 item["name"] = name
                 item["count"] = package_data.get("count", 0) + 1
+                item["initial_version"] = package_data.get("initial_version", version)
+                item["last_version"] = version
+                if version != package_data.get("last_version"):
+                    # print (f"{entry} - Version changed detected for {name}. Last version {package_data.get('last_version')}. New version {version}")
+                    item["version_no"] = package_data.get("version_no", 0) + 1
+                else:
+                    item["version_no"] = package_data.get("version_no", 0)
+                # Record version at date
+                version_history = package_data.get("version_history")
+                version_history[date] = item["version_no"]
+                item["version_history"] = version_history
                 version_data = package_data.get("version")
                 version_data[version] = version_data.get(version, 0) + 1
                 item["version"] = version_data
@@ -133,7 +155,6 @@ def main(argv=None):
                     item["license"] = license_data
                 # store data
                 sbom_packages[name] = item
-
     # Summarise
     if args["output_file"] == "":
         for package in sbom_packages.keys():

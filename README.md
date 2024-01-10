@@ -80,36 +80,91 @@ License {'MIT': 46}
 The following command will report the version changes and store the result in a JSON file.
 
 ```bash
-# sbomtrend -d <directory> --module rich -o <output file> --exclude-license
+# sbomtrend -d <directory> --module rich -o <output file> 
 ```
 
 The resulting file will be
 
 ```json
 {
-  "rich": {
-    "name": "rich",
-    "count": 46,
-    "version": {
-      "13.3.4": 2,
-      "13.0.0": 1,
-      "13.5.2": 4,
-      "13.4.1": 1,
-      "13.7.0": 5,
-      "13.3.5": 4,
-      "13.3.1": 5,
-      "13.5.0": 1,
-      "13.6.0": 7,
-      "13.4.2": 5,
-      "13.1.0": 1,
-      "13.3.3": 2,
-      "13.3.2": 4,
-      "13.5.3": 2,
-      "13.0.1": 1,
-      "13.2.0": 1
-    }
-  }
-}
+  "rich": {                                                                                                                                                                                                   
+    "name": "rich",                                                                                                                                                                                           
+    "count": 46,                                                                                                                                                                                              
+    "initial_version": "13.0.0",                                                                                                                                                                              
+    "last_version": "13.7.0",                                                                                                                                                                                 
+    "version_no": 16,                                                                                                                                                                                         
+    "version_history": {                                                                                                                                                                                      
+      "03-January-2023": 1,                                                                                                                                                                                   
+      "09-January-2023": 2,                                                                                                                                                                                   
+      "16-January-2023": 3,                                                                                                                                                                                   
+      "23-January-2023": 4,                                                                                                                                                                                   
+      "30-January-2023": 5,                                                                                                                                                                                   
+      "06-February-2023": 5,                                                                                                                                                                                  
+      "13-February-2023": 5,                                                                                                                                                                                  
+      "21-February-2023": 5,                                                                                                                                                                                  
+      "27-February-2023": 5,                                                                                                                                                                                  
+      "06-March-2023": 6,                                                                                                                                                                                     
+      "13-March-2023": 6,                                                                                                                                                                                     
+      "20-March-2023": 6,                                                                                                                                                                                     
+      "27-March-2023": 6,                                                                                                                                                                                     
+      "03-April-2023": 7,                                                                                                                                                                                     
+      "10-April-2023": 7,                                                                                                                                                                                     
+      "17-April-2023": 8,                                                                                                                                                                                     
+      "24-April-2023": 8,                                                                                                                                                                                     
+      "08-May-2023": 9,                                                                                                                                                                                       
+      "15-May-2023": 9,                                                                                                                                                                                       
+      "22-May-2023": 9,                                                                                                                                                                                       
+      "29-May-2023": 9,                                                                                                                                                                                       
+      "05-June-2023": 10,                                                                                                                                                                                     
+      "19-June-2023": 11,                                                                                                                                                                                     
+      "26-June-2023": 11,                                                                                                                                                                                     
+      "03-July-2023": 11,                                                                                                                                                                                     
+      "10-July-2023": 11,                                                                                                                                                                                     
+      "24-July-2023": 11,                                                                                                                                                                                     
+      "31-July-2023": 12,                                                                                                                                                                                     
+      "07-August-2023": 13,                                                                                                                                                                                   
+      "14-August-2023": 13,                                                                                                                                                                                   
+      "21-August-2023": 13,                                                                                                                                                                                   
+      "11-September-2023": 13,                                                                                                                                                                                
+      "18-September-2023": 14,                                                                                                                                                                                
+      "25-September-2023": 14,                                                                                                                                                                                
+      "02-October-2023": 15,                                                                                                                                                                                  
+      "09-October-2023": 15,                                                                                                                                                                                  
+      "16-October-2023": 15,                                                                                                                                                                                  
+      "23-October-2023": 15,                                                                                                                                                                                  
+      "30-October-2023": 15,                                                                                                                                                                                  
+      "06-November-2023": 15,                                                                                                                                                                                 
+      "13-November-2023": 15,                                                                                                                                                                                 
+      "27-November-2023": 16,                                                                                                                                                                                 
+      "04-December-2023": 16,                                                                                                                                                                                 
+      "11-December-2023": 16,                                                                                                                                                                                 
+      "18-December-2023": 16,                                                                                                                                                                                 
+      "25-December-2023": 16                                                                                                                                                                                  
+    },                                                                                                                                                                                                        
+    "version": {                                                                                                                                                                                              
+      "13.0.0": 1,                                                                                                                                                                                            
+      "13.0.1": 1,                                                                                                                                                                                            
+      "13.1.0": 1,                                                                                                                                                                                            
+      "13.2.0": 1,                                                                                                                                                                                            
+      "13.3.1": 5,                                                                                                                                                                                            
+      "13.3.2": 4,                                                                                                                                                                                            
+      "13.3.3": 2,                                                                                                                                                                                            
+      "13.3.4": 2,                                                                                                                                                                                            
+      "13.3.5": 4,                                                                                                                                                                                            
+      "13.4.1": 1,                                                                                                                                                                                            
+      "13.4.2": 5,                                                                                                                                                                                            
+      "13.5.0": 1,                                                                                                                                                                                            
+      "13.5.2": 4,                                                                                                                                                                                            
+      "13.5.3": 2,                                                                                                                                                                                            
+      "13.6.0": 7,                                                                                                                                                                                            
+      "13.7.0": 5                                                                                                                                                                                             
+    },                                                                                                                                                                                                        
+    "license": {                                                                                                                                                                                              
+      "MIT": 46                                                                                                                                                                                               
+    }                                                                                                                                                                                                         
+  }                                                                                                                                                                                                           
+}                                                                                                                                                                                                             
+
 ```
 
 ## Licence
