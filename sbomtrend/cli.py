@@ -8,11 +8,11 @@ import pathlib
 import sys
 import textwrap
 from collections import ChainMap
-
 from datetime import datetime
+
 from lib4sbom.data.document import SBOMDocument
-from lib4sbom.parser import SBOMParser
 from lib4sbom.license import LicenseScanner
+from lib4sbom.parser import SBOMParser
 
 from sbomtrend.version import VERSION
 
@@ -79,7 +79,7 @@ def main(argv=None):
     defaults = {
         "module": "",
         "directory": "",
-        "format":"%d-%b-%Y",
+        "format": "%d-%b-%Y",
         "include_file": False,
         "exclude_license": False,
         "output_file": "",
@@ -127,10 +127,10 @@ def main(argv=None):
         document = SBOMDocument()
         document.copy_document(parser.get_document())
         try:
-            dt = datetime.strptime(document.get_created(),"%Y-%m-%dT%H:%M:%SZ")
+            dt = datetime.strptime(document.get_created(), "%Y-%m-%dT%H:%M:%SZ")
         except:
-            dt = datetime.strptime(document.get_created(),"%Y-%m-%dT%H:%M:%S.%fZ")
-        date = datetime.strftime(dt,args["format"])
+            dt = datetime.strptime(document.get_created(), "%Y-%m-%dT%H:%M:%S.%fZ")
+        date = datetime.strftime(dt, args["format"])
         count = len(parser.get_packages())
         change = 0
         for package in parser.get_packages():
@@ -181,8 +181,10 @@ def main(argv=None):
         # Show package counts and changes
         if args["debug"]:
             for date in package_metadata.keys():
-                print (f"{date} - Packages: {package_metadata[date]['count']} Changes:  {package_metadata[date]['change']}")
-            print ("=" * 40)
+                print(
+                    f"{date} - Packages: {package_metadata[date]['count']} Changes:  {package_metadata[date]['change']}"
+                )
+            print("=" * 40)
         for package in sbom_packages.keys():
             print("Name", sbom_packages[package]["name"])
             print("Count", sbom_packages[package]["count"])
@@ -197,12 +199,16 @@ def main(argv=None):
             print("=" * 40)
     else:
         # Store data in a file
-        filedata={}
-        filedata["metadata"]={"tool": "sbomtrend", "version": VERSION, "date": datetime.now().strftime("%Y-%m-%dT%H:%M:%SZ")}
+        filedata = {}
+        filedata["metadata"] = {
+            "tool": "sbomtrend",
+            "version": VERSION,
+            "date": datetime.now().strftime("%Y-%m-%dT%H:%M:%SZ"),
+        }
         # Show summary of package counts and changes
         if module_name == "":
-            filedata["package_data"]=package_metadata
-        filedata["packages"]=sbom_packages
+            filedata["package_data"] = package_metadata
+        filedata["packages"] = sbom_packages
         with open(args["output_file"], "w") as file:
             # json.dump(sbom_packages, file)
             json.dump(filedata, file)
