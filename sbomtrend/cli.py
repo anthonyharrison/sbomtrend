@@ -40,6 +40,13 @@ def main(argv=None):
         help="Directory to be scanned",
     )
     input_group.add_argument(
+        "-f",
+        "--format",
+        action="store",
+        default="%d-%b-%Y",
+        help="Date format (default is %%d-%%b-%%Y (e.g. 01-Jan-2024))",
+    )
+    input_group.add_argument(
         "-m",
         "--module",
         action="store",
@@ -72,6 +79,7 @@ def main(argv=None):
     defaults = {
         "module": "",
         "directory": "",
+        "format":"%d-%b-%Y",
         "include_file": False,
         "exclude_license": False,
         "output_file": "",
@@ -107,6 +115,8 @@ def main(argv=None):
             print(f"Analysing {module_name}")
 
     sbom_packages = {}
+    # Record the number of packages in each SBOM
+    package_metadata = {}
     license_scanner = LicenseScanner()
     # Parse each SBOM file in directory
     for entry in sorted(pathlib.Path(file_dir).iterdir()):
@@ -116,8 +126,13 @@ def main(argv=None):
         # Get date from SBOM
         document = SBOMDocument()
         document.copy_document(parser.get_document())
-        dt = datetime.strptime(document.get_created(),"%Y-%m-%dT%H:%M:%SZ")
-        date = datetime.strftime(dt,"%d-%B-%Y")
+        try:
+            dt = datetime.strptime(document.get_created(),"%Y-%m-%dT%H:%M:%SZ")
+        except:
+            dt = datetime.strptime(document.get_created(),"%Y-%m-%dT%H:%M:%S.%fZ")
+        date = datetime.strftime(dt,args["format"])
+        count = len(parser.get_packages())
+        change = 0
         for package in parser.get_packages():
             # For each package, extract version and licence information
             name = package["name"]
@@ -139,12 +154,13 @@ def main(argv=None):
                 item["last_version"] = version
                 if version != package_data.get("last_version"):
                     # print (f"{entry} - Version changed detected for {name}. Last version {package_data.get('last_version')}. New version {version}")
-                    item["version_no"] = package_data.get("version_no", 0) + 1
+                    item["versions"] = package_data.get("versions", 0) + 1
+                    change += 1
                 else:
-                    item["version_no"] = package_data.get("version_no", 0)
+                    item["versions"] = package_data.get("versions", 0)
                 # Record version at date
                 version_history = package_data.get("version_history")
-                version_history[date] = item["version_no"]
+                version_history[date] = item["versions"]
                 item["version_history"] = version_history
                 version_data = package_data.get("version")
                 version_data[version] = version_data.get(version, 0) + 1
@@ -155,8 +171,18 @@ def main(argv=None):
                     item["license"] = license_data
                 # store data
                 sbom_packages[name] = item
+        if len(package_metadata) > 0:
+            package_metadata[date] = {"count": count, "change": change}
+        else:
+            # No changes for first date
+            package_metadata[date] = {"count": count, "change": 0}
     # Summarise
     if args["output_file"] == "":
+        # Show package counts and changes
+        if args["debug"]:
+            for date in package_metadata.keys():
+                print (f"{date} - Packages: {package_metadata[date]['count']} Changes:  {package_metadata[date]['change']}")
+            print ("=" * 40)
         for package in sbom_packages.keys():
             print("Name", sbom_packages[package]["name"])
             print("Count", sbom_packages[package]["count"])
@@ -170,8 +196,16 @@ def main(argv=None):
             #     print(element, sbom_packages[package][element])
             print("=" * 40)
     else:
+        # Store data in a file
+        filedata={}
+        filedata["metadata"]={"tool": "sbomtrend", "version": VERSION, "date": datetime.now().strftime("%Y-%m-%dT%H:%M:%SZ")}
+        # Show summary of package counts and changes
+        if module_name == "":
+            filedata["package_data"]=package_metadata
+        filedata["packages"]=sbom_packages
         with open(args["output_file"], "w") as file:
-            json.dump(sbom_packages, file)
+            # json.dump(sbom_packages, file)
+            json.dump(filedata, file)
     return 0
 
 
