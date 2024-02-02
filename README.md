@@ -224,6 +224,7 @@ The examples are:
 - **_analysis_** which analyses the version changes for each package
 - **_summary_** which provides a summary of the number of packages and changes in each SBOM
 - **_maintained_** which identifies the packages which have a single version and creates a chart which shows the time when the package was last updated. Packages more than 2 years old are highlighted.
+- **_direct_** which identifies the version changes for direct package dependencies
 
 ## Licence
 
