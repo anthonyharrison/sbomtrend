@@ -22,5 +22,5 @@ plt.grid(axis='x', color='0.95')
 plt.grid(axis='y', color='0.95')
 plt.legend(title='Parameters')
 plt.title('Package Analysis')
-plt.savefig("/tmp/summary.png")
+plt.savefig("/tmp/change.png")
 

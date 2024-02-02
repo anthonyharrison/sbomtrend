@@ -8,20 +8,6 @@ filename="/tmp/cvebin.json"
 with open(filename) as file:
     data=json.load(file)
 
-#
-#
-# filename="/tmp/packages.txt"
-#
-# with open(filename) as f:
-#     package_list = f.readlines()
-#
-# # Remove new lines
-# package_list = [x.strip() for x in package_list]
-# for package in package_list:
-#     pm.get_package(package)
-#     last_update = pm.get_latest_release_time()
-#     print (f"{package}, {last_update}")
-
 fig, ax = plt.subplots(figsize=(20,12), layout='constrained')
 update=[]
 packages=[]
