@@ -1,2 +1,2 @@
-lib4sbom >= 0.6.1
+lib4sbom >= 0.7.2
 
